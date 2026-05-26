@@ -1,0 +1,57 @@
+# services networks volumes ports build image environment
+# spaces no tab
+
+services:
+  nginx:
+    container_name: nginx
+    build: ./requirements/nginx
+    env_file:
+      - .env
+    networks:
+      - inception
+    volumes:
+      - wordpress_vol:/var/www/html
+
+
+  wordpress:
+    container_name: wordpress
+    build: ./requirements/wordpress
+    env_file:
+      - .env
+    networks:
+      - inception
+    image: wordpress:stable
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    volumes:
+      - wordpress_vol:/var/www/html
+
+
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb
+    env_file:
+      - .env
+    networks:
+      - inception
+    volumes:
+      - mariadb_vol:/var/lib/mysql
+
+
+volumes:
+  wordpress_vol:
+  driver: local
+  driver_opts:
+    type: none
+    device: /home/data/mariadb
+    o: bind
+  mariadb_vol:
+  driver: local
+  driver_opts:
+    type: none
+    device: /home/data/wordpress
+    o: bind
+
+networks:
+  inception:
