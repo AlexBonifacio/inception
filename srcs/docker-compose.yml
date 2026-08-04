@@ -2,56 +2,67 @@
 # spaces no tab
 
 services:
-  nginx:
-    container_name: nginx
-    build: ./requirements/nginx
-    env_file:
-      - .env
-    networks:
-      - inception
-    volumes:
-      - wordpress_vol:/var/www/html
+#   nginx:
+#     container_name: nginx
+#     build: ./requirements/nginx
+#     env_file:
+#       - .env
+#     networks:
+#       - inception
+#     volumes:
+#       - wordpress_vol:/var/www/html
 
 
-  wordpress:
-    container_name: wordpress
-    build: ./requirements/wordpress
-    env_file:
-      - .env
-    networks:
-      - inception
-    image: wordpress:stable
-    depends_on:
-      mariadb:
-        condition: service_healthy
-    volumes:
-      - wordpress_vol:/var/www/html
+#   wordpress:
+#     container_name: wordpress
+#     build: ./requirements/wordpress
+#     env_file:
+#       - .env
+#     networks:
+#       - inception
+#     image: wordpress:stable
+#     depends_on:
+#       mariadb:
+#         condition: service_healthy
+#     volumes:
+#       - wordpress_vol:/var/www/html
 
 
   mariadb:
-    container_name: mariadb
     build: ./requirements/mariadb
+    image: mariadb
+    container_name: mariadb
+    volumes:
+      - mariadb_vol:/var/lib/mysql
     env_file:
       - .env
     networks:
       - inception
-    volumes:
-      - mariadb_vol:/var/lib/mysql
+    restart: on-failure
+    secrets:
+      - db_root_password
+      - db_password
 
 
 volumes:
-  wordpress_vol:
-  driver: local
-  driver_opts:
-    type: none
-    device: /home/data/mariadb
-    o: bind
+#   wordpress_vol:
+#   driver: local
+#   driver_opts:
+#     type: none
+#     device: /home/data/wordpress
+#     o: bind
   mariadb_vol:
-  driver: local
-  driver_opts:
-    type: none
-    device: /home/data/wordpress
-    o: bind
+#   driver: local
+#   driver_opts:
+#     type: none
+#     device: /home/data/mariadb
+#     o: bind
 
 networks:
   inception:
+
+secrets:
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  db_password:
+    file: ../secrets/db_password.txt
