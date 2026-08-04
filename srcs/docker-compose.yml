@@ -13,24 +13,27 @@ services:
 #       - wordpress_vol:/var/www/html
 
 
-#   wordpress:
-#     container_name: wordpress
-#     build: ./requirements/wordpress
-#     env_file:
-#       - .env
-#     networks:
-#       - inception
-#     image: wordpress:stable
-#     depends_on:
-#       mariadb:
-#         condition: service_healthy
-#     volumes:
-#       - wordpress_vol:/var/www/html
+  wordpress:
+    build: ./requirements/wordpress
+    image: wordpress:inception
+    container_name: wordpress
+    env_file:
+      - .env
+    networks:
+      - inception
+    depends_on:
+      mariadb:
+        condition: service_started
+    volumes:
+      - wordpress_vol:/var/www/html
+    restart: on-failure
+    secrets:
+      - db_password
 
 
   mariadb:
     build: ./requirements/mariadb
-    image: mariadb
+    image: mariadb:inception
     container_name: mariadb
     volumes:
       - mariadb_vol:/var/lib/mysql
@@ -45,18 +48,18 @@ services:
 
 
 volumes:
-#   wordpress_vol:
-#   driver: local
-#   driver_opts:
-#     type: none
-#     device: /home/data/wordpress
-#     o: bind
+  wordpress_vol:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/abonifac/data/wordpress
+      o: bind
   mariadb_vol:
-#   driver: local
-#   driver_opts:
-#     type: none
-#     device: /home/data/mariadb
-#     o: bind
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/abonifac/data/mariadb
+      o: bind
 
 networks:
   inception:

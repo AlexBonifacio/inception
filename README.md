@@ -30,3 +30,5 @@ wp config create
 Generates a wp-config.php file.
 
 https://lemagweb.fr/mysql-mariadb-tuning-wordpress-multi/
+
+docker exec wordpress ps -ef

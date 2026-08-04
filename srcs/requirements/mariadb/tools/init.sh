@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -e
 mkdir -p /run/mysqld
 chown mysql:mysql /run/mysqld
 
@@ -12,6 +13,7 @@ if [ ! -d /var/lib/mysql/mysql ]; then
 
 	mariadbd --user=mysql --bootstrap << EOF
 USE mysql;
+FLUSH PRIVILEGES;
 CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;
 CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$DB_PASS';
 GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';
