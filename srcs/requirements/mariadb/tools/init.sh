@@ -11,7 +11,7 @@ if [ ! -d /var/lib/mysql/mysql ]; then
 	echo "Init database..."
 	mariadb-install-db --user=mysql --datadir=/var/lib/mysql
 
-	mariadbd --user=mysql --bootstrap << EOF
+	mariadbd --user=mysql --bootstrap --verbose << EOF
 USE mysql;
 FLUSH PRIVILEGES;
 CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;
@@ -23,8 +23,5 @@ DROP DATABASE IF EXISTS test;
 FLUSH PRIVILEGES;
 EOF
 fi
-
-echo "Start mariadb...";
-
 
 exec mariadbd --user=mysql

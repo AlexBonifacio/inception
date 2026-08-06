@@ -2,15 +2,19 @@
 # spaces no tab
 
 services:
-#   nginx:
-#     container_name: nginx
-#     build: ./requirements/nginx
-#     env_file:
-#       - .env
-#     networks:
-#       - inception
-#     volumes:
-#       - wordpress_vol:/var/www/html
+  nginx:
+    container_name: nginx
+    build: ./requirements/nginx
+    env_file:
+      - .env
+    networks:
+      - inception
+    volumes:
+      - wordpress_vol:/var/www/html
+    ports:
+      - "443:443"
+    depends_on: wordpress
+    restart: on-failure
 
 
   wordpress:
@@ -29,7 +33,8 @@ services:
     restart: on-failure
     secrets:
       - db_password
-
+      - wp_admin_password
+      - wp_user_password
 
   mariadb:
     build: ./requirements/mariadb
@@ -52,13 +57,13 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/abonifac/data/wordpress
+      device: /home/alex/data/wordpress
       o: bind
   mariadb_vol:
     driver: local
     driver_opts:
       type: none
-      device: /home/abonifac/data/mariadb
+      device: /home/alex/data/mariadb
       o: bind
 
 networks:
@@ -69,3 +74,7 @@ secrets:
     file: ../secrets/db_root_password.txt
   db_password:
     file: ../secrets/db_password.txt
+  wp_admin_password:
+    file: ../secrets/wp_admin_password.txt
+  wp_user_password:
+    file: ../secrets/wp_user_password.txt
