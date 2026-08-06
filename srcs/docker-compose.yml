@@ -12,8 +12,9 @@ services:
     volumes:
       - wordpress_vol:/var/www/html
     ports:
-      - "443:443"
-    depends_on: wordpress
+      - "1025:1025"
+    depends_on: 
+      - wordpress
     restart: on-failure
 
 
@@ -57,13 +58,13 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/alex/data/wordpress
+      device: /home/abonifac/data/wordpress
       o: bind
   mariadb_vol:
     driver: local
     driver_opts:
       type: none
-      device: /home/alex/data/mariadb
+      device: /home/abonifac/data/mariadb
       o: bind
 
 networks:

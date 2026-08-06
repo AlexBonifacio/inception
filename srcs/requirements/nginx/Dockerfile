@@ -5,14 +5,15 @@ ARG DOMAIN_NAME=abonifac.42.fr
 
 RUN apt-get update \
 	&& apt-get install -y nginx openssl \
-	&& rm -rf /var/lib/apt/lists/*
+	&& rm -rf /var/lib/apt/lists/* \
+	&& rm -f /etc/nginx/sites-enabled/default
 
-RUN echo "Creating self-signed SSL certificate..." \
+RUN mkdir -p /etc/nginx/ssl \
 	&& openssl req -x509 -nodes -days ${DAYS_VALID} \
 	-newkey rsa:2048 \
-	-keyout /etc/ssl/private/nginx-selfsigned.key \
+	-keyout /etc/nginx/ssl/inception.key \
 	-out /etc/nginx/ssl/inception.crt \
-	-subj "/C=FR/ST=RH/L=Lyon/O=42/CN=abonifac.42.fr"
+	-subj "/C=FR/ST=RH/L=Lyon/O=42/CN=${DOMAIN_NAME}"
 
 COPY ./conf/nginx.conf /etc/nginx/conf.d/default.conf
 

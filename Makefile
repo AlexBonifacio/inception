@@ -1,4 +1,4 @@
-DATA = /home/alex/data
+DATA = /home/abonifac/data
 COMPOSE = docker compose -f srcs/docker-compose.yml
 
 all:
